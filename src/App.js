@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "@firebase/firestore";
 
-function App() {
+import { db } from "./firebase-config";
+
+const App = () => {
+  const carsCollectionRef = collection(db, "cars");
+
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const result = await getDocs(carsCollectionRef);
+      console.log(result.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      setCars(result.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    })();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        cars.length ?
+          cars.map(car => (
+            <p key={car.id}>{car.name}</p>
+          )) :
+          <p>loading</p>
+      }
     </div>
   );
 }
