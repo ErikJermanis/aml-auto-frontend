@@ -1,32 +1,22 @@
-import { useState, useEffect } from "react";
-import { collection, getDocs } from "@firebase/firestore";
-
-import { db } from "./firebase-config";
+import { Route, Routes, Outlet } from "react-router";
 
 const App = () => {
-  const carsCollectionRef = collection(db, "cars");
-
-  const [cars, setCars] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const result = await getDocs(carsCollectionRef);
-      console.log(result.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-      setCars(result.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    })();
-  }, []);
-
   return (
-    <div className="App">
-      {
-        cars.length ?
-          cars.map(car => (
-            <p key={car.id}>{car.name}</p>
-          )) :
-          <p>loading</p>
-      }
+    <div>
+      <Routes>
+        <Route path="/admin" element={<h1>Login to admin</h1>} />
+      </Routes>
+      <Routes>
+        <Route index element={<h1>Home</h1>} />
+        <Route path="/cars" element={<h1>Cars</h1>} />
+        <Route path="/book" element={<h1>Book</h1>} />
+        <Route path="/admin" element={<Outlet />} >
+          <Route path="cars" element={<h1>Admin cars</h1>} />
+          <Route path="reservations" element={<h1>Admin reservations</h1>} />
+        </Route>
+      </Routes>
     </div>
-  );
+  )
 }
 
 export default App;
