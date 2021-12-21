@@ -1,6 +1,6 @@
 const BookACar = () => {
   return (
-    <div>
+    <div className="pt-16">
       Book a car
     </div>
   )
