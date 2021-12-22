@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Button from '../../components/button';
 
 import { ReactComponent as CarsSvg } from '../../assets/illustrations/cars.svg';
@@ -18,7 +20,7 @@ const Homepage = () => {
         <p className="my-9">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam arcu tellus, accumsan sed elit iaculis, pulvinar feugiat metus. Nam sed diam purus. Morbi at gravida nisi, quis lobortis massa.</p>
         <div>
           <Button primary className="mr-4">Book a car</Button>
-          <Button secondary>Browse fleet</Button>
+          <Link to="cars"><Button secondary>Browse fleet</Button></Link>
         </div>
       </div>
       <CarsSvg className="w-1/5" />

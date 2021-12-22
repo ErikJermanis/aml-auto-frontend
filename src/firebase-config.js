@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDBoUk-fZF-48S-fO83fNj9rewS7n0Vf40",
-  authDomain: "automotolabilni-automobili.firebaseapp.com",
-  projectId: "automotolabilni-automobili",
-  storageBucket: "automotolabilni-automobili.appspot.com",
-  messagingSenderId: "615750595970",
-  appId: "1:615750595970:web:a80c9f7458e9a56e978b9b",
-  measurementId: "G-HZDLXQ3KQL"
+  apiKey: "AIzaSyAymvtir4aQe2ZUnV8xTX9LRpEtfvLws9Q",
+  authDomain: "aml-auto.firebaseapp.com",
+  projectId: "aml-auto",
+  storageBucket: "aml-auto.appspot.com",
+  messagingSenderId: "775842276708",
+  appId: "1:775842276708:web:e03561739f45d8b5a80671",
+  measurementId: "G-PW8EF9JER0"
 };
 
 const app = initializeApp(firebaseConfig);

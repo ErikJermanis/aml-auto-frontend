@@ -1,67 +1,17 @@
+import { collection } from "firebase/firestore";
+
+import { db } from '../../firebase-config';
+import { useGetData } from '../../customHooks/useGetData';
+
 import TextLogo from "../../components/textLogo";
 import Button from "../../components/button";
-
-const dummyData = [
-  {
-    id: 1,
-    brand: "Mercedes",
-    name: "C-Class",
-    numberOfSeats: 5,
-    numberOfDoors: 4,
-    enginePower: 205,
-    engineType: 'plug-in hybrid petrol',
-    transmission: '9-speed-automatic',
-    image: "https://www.topgear.com/sites/default/files/cars-car/image/2021/07/rimacnevera-26_0.jpg",
-    features: ['parking sensor', 'bluetooth', 'heated seats', 'android auto', 'apple car-play'],
-    price: 235
-  },
-  {
-    id: 2,
-    brand: "Mercedes",
-    name: "C-Class",
-    numberOfSeats: 5,
-    numberOfDoors: 4,
-    enginePower: 205,
-    engineType: 'plug-in hybrid petrol',
-    transmission: '9-speed-automatic',
-    image: "https://www.topgear.com/sites/default/files/cars-car/image/2021/07/rimacnevera-26_0.jpg",
-    features: ['parking sensor', 'bluetooth', 'heated seats', 'android auto', 'apple car-play'],
-    price: 235
-  },
-  {
-    id: 3,
-    brand: "Mercedes",
-    name: "C-Class",
-    numberOfSeats: 5,
-    numberOfDoors: 4,
-    enginePower: 205,
-    engineType: 'plug-in hybrid petrol',
-    transmission: '9-speed-automatic',
-    image: "https://www.topgear.com/sites/default/files/cars-car/image/2021/07/rimacnevera-26_0.jpg",
-    features: ['parking sensor', 'bluetooth', 'heated seats', 'android auto', 'apple car-play'],
-    price: 235
-  },
-  {
-    id: 4,
-    brand: "Mercedes",
-    name: "C-Class",
-    numberOfSeats: 5,
-    numberOfDoors: 4,
-    enginePower: 205,
-    engineType: 'plug-in hybrid petrol',
-    transmission: '9-speed-automatic',
-    image: "https://www.topgear.com/sites/default/files/cars-car/image/2021/07/rimacnevera-26_0.jpg",
-    features: ['parking sensor', 'bluetooth', 'heated seats', 'android auto', 'apple car-play'],
-    price: 235
-  },
-];
 
 const CardLabel = ({ title, children }) => <p className="mb-1"><span className="text-sm">{title}:</span> {children}</p>;
 
 const FeatureLabel = ({ children }) => <span className="text-sm bg-secondary rounded-full px-1.5 m-1">{children}</span>
 
 const CarCard = ({ car }) => {
-  const { image, name, brand, numberOfDoors, numberOfSeats, enginePower, engineType, transmission, features, price } = car;
+  const { image, name, brand, numberOfDoors, numberOfSeats, enginePower, engineType, transmission, additionalFeatures, price } = car;
 
   return (
     <div className="p-3 w-1/3">
@@ -75,7 +25,7 @@ const CarCard = ({ car }) => {
           <CardLabel title="Engine type">{engineType}</CardLabel>
           <CardLabel title="Transmission">{transmission}</CardLabel>
           <div className="flex flex-wrap my-4">
-            {features.map((feature, index) => <FeatureLabel key={index}>{feature}</FeatureLabel>)}
+            {additionalFeatures.map((feature, index) => <FeatureLabel key={index}>{feature}</FeatureLabel>)}
           </div>
           <div className="flex justify-between items-center">
             <p className="font-medium text-primary text-lg">from {Math.round(price * 0.6)}€ / day</p>
@@ -88,15 +38,17 @@ const CarCard = ({ car }) => {
 };
 
 const OurFleet = () => {
+  const carsCollectionRef = collection(db, 'cars');
+
+  const { data, loading, error } = useGetData(carsCollectionRef);
+
   return (
     <div className="py-16">
       <h2 className="font-bold text-3xl text-center my-24"><TextLogo /> fleet</h2>
-      <div className="max-w-screen-xl mx-auto flex flex-wrap">
-        {
-          dummyData.map(car => (
-            <CarCard car={car} key={car.id} />
-          ))
-        }
+      <div className="max-w-screen-xl mx-auto flex flex-wrap items-start">
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-center w-full bg-red-200 text-red-700 font-semibold text-lg rounded-lg drop-shadow-lg p-4">{error}</p>}
+        {data && data.map((car, index) => <CarCard key={index} car={car} />)}
       </div>
     </div>
   )
