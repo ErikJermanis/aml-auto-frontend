@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { collection } from "firebase/firestore";
 
 import { db } from '../../firebase-config';
@@ -29,7 +30,7 @@ const CarCard = ({ car }) => {
           </div>
           <div className="flex justify-between items-center">
             <p className="font-medium text-primary text-lg">from {Math.round(price * 0.6)}€ / day</p>
-            <Button primary>Book</Button>
+            <Link to={`/book?car=${car.id}`}><Button primary>Book</Button></Link>
           </div>
         </div>
       </div>

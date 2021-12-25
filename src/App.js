@@ -25,7 +25,11 @@ const App = () => {
         <Route path="adminlogin" element={<AdminLogin />} />
         <Route path="admin" element={<div>sidenav<Outlet /></div>} >
           <Route index element={<div>redirect to /admin/cars</div>} />
-          <Route path="cars" element={<CarList />} />
+          <Route path="cars" element={<CarList />} >
+            <Route index element={<CarList />} />
+            <Route path="new" element={<div>new car</div>} />
+            <Route path="edit/:id" element={<div>edit car</div>} />
+          </Route>
           <Route path="reservations" element={<div><Outlet /></div>} >
             <Route index element={<ReservationList />} />
             <Route path="new" element={<div>new reservation</div>} />
