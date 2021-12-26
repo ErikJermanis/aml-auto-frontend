@@ -10,7 +10,7 @@ const CardLabel = ({ title, children }) => <p className="mb-1"><span className="
 const FeatureLabel = ({ children }) => <span className="text-sm bg-secondary rounded-full px-1.5 m-1">{children}</span>
 
 const CarCard = ({ car }) => {
-  const { image, name, brand, numberOfDoors, numberOfSeats, enginePower, engineType, transmission, additionalFeatures, price } = car;
+  const { image, name, brand, numberOfDoors, numberOfSeats, enginePower, engineType, transmission, additionalFeatures, price, bodyType } = car;
 
   return (
     <div className="p-3 w-1/3">
@@ -18,6 +18,7 @@ const CarCard = ({ car }) => {
         <img src={image} alt={name} className="h-56 w-full object-cover" />
         <div className="p-3">
           <h6 className="font-medium text-primary text-lg mb-4">{brand} | {name}</h6>
+          <CardLabel title="Body type">{bodyType}</CardLabel>
           <CardLabel title="Number of seats">{numberOfSeats}</CardLabel>
           <CardLabel title="Number of doors">{numberOfDoors}</CardLabel>
           <CardLabel title="Engine power">{enginePower} kW</CardLabel>
@@ -44,7 +45,7 @@ const OurFleet = () => {
       <h2 className="font-bold text-3xl text-center my-24"><TextLogo /> fleet</h2>
       <div className="max-w-screen-xl mx-auto flex flex-wrap items-start">
         {loading && <p>Loading...</p>}
-        {error && <p className="text-center w-full bg-red-200 text-red-700 font-semibold text-lg rounded-lg drop-shadow-lg p-4">{error}</p>}
+        {error && <p className="text-center w-full bg-red-200 text-red-700 font-semibold text-lg rounded-lg drop-shadow-lg p-4 mx-2">{error}</p>}
         {data && data.map((car, index) => <CarCard key={index} car={car} />)}
       </div>
     </div>
