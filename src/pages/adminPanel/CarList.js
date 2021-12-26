@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useTable } from "react-table";
+import { useMemo, forwardRef, useRef, useEffect } from "react";
+import { useTable, useFilters, useRowSelect } from "react-table";
 
 const CarList = () => {
 
@@ -117,6 +117,95 @@ const CarList = () => {
     []
   );
 
+  const NumberRangeColumnFilter = ({ column: { filterValue = [], preFilteredRows, setFilter, id } }) => {
+    const [min, max] = useMemo(() => {
+      let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+      let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+      preFilteredRows.forEach(row => {
+        min = Math.min(row.values[id], min)
+        max = Math.max(row.values[id], max)
+      })
+      return [min, max]
+    }, [id, preFilteredRows])
+  
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center' }} >
+        <input
+          value={filterValue[0] || ''}
+          type="number"
+          onChange={e => {
+            const val = e.target.value
+            setFilter([val ? Number(val) : undefined, filterValue[1]])
+          }}
+          placeholder={`Min (${min})`}
+          style={{ width: '70px', marginRight: '0.5rem' }}
+        />
+        to
+        <input
+          value={filterValue[1] || ''}
+          type="number"
+          onChange={e => {
+            const val = e.target.value
+            setFilter([filterValue[0], val ? Number(val) : undefined])
+          }}
+          placeholder={`Max (${max})`}
+          style={{ width: '70px', marginLeft: '0.5rem' }}
+        />
+      </div>
+    )
+  }
+
+  const SelectColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
+    const options = useMemo(() => {
+      const options = new Set()
+      preFilteredRows.forEach(row => {
+        options.add(row.values[id])
+      })
+      return [...options.values()]
+    }, [id, preFilteredRows])
+  
+    return (
+      <select
+        value={filterValue}
+        onChange={e => {
+          setFilter(e.target.value || undefined)
+        }}
+      >
+        <option value="">All</option>
+        {options.map((option, i) => (
+          <option key={i} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    )
+  }
+
+  const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter } }) => {
+    const count = preFilteredRows.length
+  
+    return (
+      <input
+        value={filterValue || ''}
+        onChange={e => {
+          setFilter(e.target.value || undefined)
+        }}
+        placeholder={`Search ${count} records...`}
+      />
+    )
+  }
+
+  const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
+    const defaultRef = useRef()
+    const resolvedRef = ref || defaultRef
+
+    useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />
+  })
+
   const columns = useMemo(
     () => [
       {
@@ -137,42 +226,78 @@ const CarList = () => {
         columns: [
           {
             Header: 'Engine type',
-            accessor: 'engineType'
+            accessor: 'engineType',
+            Filter: SelectColumnFilter
           },
           {
             Header: 'Body type',
-            accessor: 'bodyType'
+            accessor: 'bodyType',
+            Filter: SelectColumnFilter
           },
           {
             Header: 'Price',
-            accessor: 'price'
+            accessor: 'price',
+            Filter: NumberRangeColumnFilter,
+            filter: 'between'
           }
         ]
+      },
+      {
+        Header: 'Zašto baš ti?',
+        accessor: 'actions',
+        disableFilters: true
       }
     ],
     []
   );
 
-  const tableInstance = useTable({ columns, data });
+  const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
 
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
+    selectedFlatRows,
+    state: { selectedRowIds },
     prepareRow,
-  } = tableInstance;
+  } = useTable(
+    { columns, data, defaultColumn },
+    useFilters,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
+  );
 
   return (
     <div className="p-2">
       <h2 className="font-bold text-2xl m-8">Manage cars</h2>
 
-      <table {...getTableProps()} className="w-full rounded-xl border-collapse overflow-hidden drop-shadow">
-        <thead className="bg-primary text-white">
+      <table {...getTableProps()} className="w-full">
+        <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()} className="">
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                  <div>{column.canFilter ? column.render('Filter') : null}</div>
+                </th>
               ))}
             </tr>
           ))}
