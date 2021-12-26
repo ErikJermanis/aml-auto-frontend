@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getDocs } from "firebase/firestore";
+import axios from "axios";
 
-export const useGetData = dbRef => {
+export const useGetData = url => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -10,16 +10,16 @@ export const useGetData = dbRef => {
     (async () => {
       try {
         setLoading(true);
-        let result = await getDocs(dbRef);
-        result = result.docs.map(each => ({ ...each.data(), id: each.id }));
-        setData(result);
+        const result = await axios.get(`${process.env.REACT_APP_API_DOMAIN}${url}`);
+        setData(result.data);
       } catch(error) {
-        setError(error);
+        console.log(error);
+        setError('Oops! Something went wrong.');
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [url]);
 
   return { data, loading, error };
 };

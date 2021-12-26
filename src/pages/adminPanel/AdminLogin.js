@@ -1,17 +1,24 @@
 import { useRef, useState, useCallback } from "react";
-import { auth } from "../../firebase-config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate, Navigate } from "react-router-dom";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 import TextLogo from "../../components/textLogo";
 import InputGroup from "../../components/inputGroup";
 import Button from "../../components/button";
+import { ErrorToast } from "../../components/swalMixins";
 
 const AdminLogin = () => {
+  const navigate = useNavigate();
+
   const usernameRef = useRef();
   const passwordRef = useRef();
 
+  const { signin, userToken } = useAuth();
+
   const [usernameInvalid, setUsernameInvalid] = useState(null);
   const [passwordInvalid, setPasswordInvalid] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -27,13 +34,20 @@ const AdminLogin = () => {
     }
     if(!allValid) return;
 
+    setIsLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, usernameRef.current.value, passwordRef.current.value);
-      console.log(result.user.accessToken);
+      await signin(usernameRef.current.value, passwordRef.current.value);
+      navigate("/admin/cars");
     } catch(error) {
-      console.log(error.message);
+      ErrorToast.fire({ title: "Invalid credentials" });
+      setIsLoading(false);
     }
   };
+
+  const validateUsername = useCallback(() => setUsernameInvalid(null), []);
+  const validatePassword = useCallback(() => setPasswordInvalid(null), []);
+
+  if(userToken) return <Navigate to="/admin/cars" />;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center h-screen">
@@ -41,19 +55,19 @@ const AdminLogin = () => {
       <InputGroup
         label="Username"
         refProp={usernameRef}
-        onChange={useCallback(() => setUsernameInvalid(null), [])}
+        onChange={validateUsername}
         invalid={usernameInvalid}
         className="mt-4"
       />
       <InputGroup
         label="Password"
         refProp={passwordRef}
-        onChange={useCallback(() => (setPasswordInvalid(null)), [])}
+        onChange={validatePassword}
         invalid={passwordInvalid}
         className="mt-4"
         type="password"
       />
-      <Button type="submit" className="mt-6" primary>Login</Button>
+      <Button disabled={isLoading} type="submit" className="mt-6" primary>{isLoading ? 'Please wait...' : 'Login'}</Button>
     </form>
   )
 }

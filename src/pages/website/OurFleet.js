@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
-import { collection } from "firebase/firestore";
 
-import { db } from '../../firebase-config';
 import { useGetData } from '../../customHooks/useGetData';
 
 import TextLogo from "../../components/textLogo";
@@ -39,9 +37,7 @@ const CarCard = ({ car }) => {
 };
 
 const OurFleet = () => {
-  const carsCollectionRef = collection(db, 'cars');
-
-  const { data, loading, error } = useGetData(carsCollectionRef);
+  const { data, loading, error } = useGetData('/cars');
 
   return (
     <div className="py-16">
