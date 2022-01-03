@@ -7,6 +7,7 @@ import { useGetData } from "../../customHooks/useGetData";
 import CarsTable from "../../components/carsTable";
 import SelectColumnFilter from "../../components/tableFilters/selectColumnFilter";
 import NumberRangeColumnFilter from "../../components/tableFilters/numberRangeColumnFilter";
+import Button from "../../components/button";
 
 const CarList = () => {
   const { data, loading } = useGetData('/cars');
@@ -54,7 +55,10 @@ const CarList = () => {
 
   return (
     <div className="p-2">
-      <h2 className="font-bold text-2xl m-8">Manage cars</h2>
+      <div className="flex items-center">
+        <h2 className="font-bold text-2xl m-8">Manage cars</h2>
+        <Link to="new"><Button primary>Add new</Button></Link>
+      </div>
       {loading && <p>Loading...</p>}
       {data && <CarsTable data={tableData} columns={columns} />}
     </div>

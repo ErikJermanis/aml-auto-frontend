@@ -1,16 +1,42 @@
 import Select from 'react-select';
 import classNames from 'classnames';
 
-const InputSelect = ({ label, invalid, className, options, isMulti, disabled, value }) => {
+const InputSelect = ({ label, invalid, className, options, disabled, value }) => {
+
+  const customStyles = {
+    control: provided => ({
+      ...provided,
+      borderWidth: 0,
+      minHeight: 32,
+      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+      borderRadius: '0.5rem'
+    }),
+    dropdownIndicator: provided => ({
+      ...provided,
+      color: 'black'
+    }),
+    indicatorSeparator: provided => ({
+      ...provided,
+      backgroundColor: '#FFA64E'
+    }),
+    menu: provided => ({
+      ...provided,
+      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+      borderRadius: '0.5rem',
+      overflow: 'hidden'
+    }),
+    option: provided => ({
+      ...provided,
+      padding: '4px 10px'
+    })
+  };
+
   return (
     <div className={classNames('flex flex-col', { 'text-red-600': invalid }, className)}>
       <label className="pl-1.5">{label}</label>
-      {/* <input onInput={onChange} ref={ref} type={type} className="px-2 py-1 rounded-lg shadow-lg" /> */}
       <Select
         options={options}
-        // theme={theme}
-        classNamePrefix="inputSelect"
-        isMulti={isMulti}
+        styles={customStyles}
         isDisabled={disabled}
         value={value}
       />
