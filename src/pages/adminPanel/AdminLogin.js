@@ -54,14 +54,14 @@ const AdminLogin = () => {
       <h1 className="font-medium text-xl"><TextLogo /> admin</h1>
       <InputGroup
         label="Username"
-        refProp={usernameRef}
+        ref={usernameRef}
         onChange={validateUsername}
         invalid={usernameInvalid}
         className="mt-4"
       />
       <InputGroup
         label="Password"
-        refProp={passwordRef}
+        ref={passwordRef}
         onChange={validatePassword}
         invalid={passwordInvalid}
         className="mt-4"

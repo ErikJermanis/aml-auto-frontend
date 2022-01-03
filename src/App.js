@@ -12,6 +12,7 @@ import AdminLayout from "./pages/adminPanel/AdminLayout";
 import AdminIndex from "./pages/adminPanel/AdminIndex";
 import AdminLogin from "./pages/adminPanel/AdminLogin";
 import CarList from "./pages/adminPanel/CarList";
+import EditCar from "./pages/adminPanel/EditCar";
 import ReservationList from "./pages/adminPanel/ReservationList";
 
 // Import website components
@@ -30,10 +31,10 @@ const App = () => {
           <Route path="adminlogin" element={<AdminLogin />} />
           <Route path="admin" element={<AdminLayout />} >
             <Route index element={<AdminIndex />} />
-            <Route path="cars" element={<CarList />} >
+            <Route path="cars" element={<div><Outlet /></div>} >
               <Route index element={<CarList />} />
               <Route path="new" element={<div>new car</div>} />
-              <Route path="edit/:id" element={<div>edit car</div>} />
+              <Route path="edit/:id" element={<EditCar />} />
             </Route>
             <Route path="reservations" element={<div><Outlet /></div>} >
               <Route index element={<ReservationList />} />

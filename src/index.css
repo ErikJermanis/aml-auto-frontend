@@ -6,3 +6,7 @@
   background-color: #f54242 !important;
   color: white;
 }
+
+.tableChild:nth-child(2n) {
+  background: white;
+}
