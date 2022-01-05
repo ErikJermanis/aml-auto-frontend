@@ -1,7 +1,8 @@
+import { memo, forwardRef } from 'react';
 import Select from 'react-select';
 import classNames from 'classnames';
 
-const InputSelect = ({ label, invalid, className, options, disabled, value }) => {
+const InputSelect = forwardRef(({ label, invalid, className, options, disabled, onChange }, ref) => {
 
   const customStyles = {
     control: provided => ({
@@ -38,12 +39,13 @@ const InputSelect = ({ label, invalid, className, options, disabled, value }) =>
         options={options}
         styles={customStyles}
         isDisabled={disabled}
-        value={value}
+        onChange={onChange}
+        ref={ref}
       />
 
       <span className="text-sm pl-1">{invalid}</span>
     </div>
   )
-};
+});
 
-export default InputSelect;
+export default memo(InputSelect);

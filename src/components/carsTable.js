@@ -1,18 +1,7 @@
-import { useMemo, forwardRef, useRef, useEffect } from "react";
+import { useMemo } from "react";
 import { useTable, useFilters, useRowSelect } from "react-table";
 
 import TextColumnFilter from "./tableFilters/textColumnFilter";
-
-const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = useRef()
-  const resolvedRef = ref || defaultRef
-
-  useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate
-  }, [resolvedRef, indeterminate])
-
-  return <input type="checkbox" ref={resolvedRef} {...rest} />
-})
 
 const CarsTable = ({ columns, data }) => {
 
