@@ -105,10 +105,6 @@ const EditCar = () => {
       setBrandInvalid("Brand is required");
       allValid = false;
     }
-    if(!bodyTypeRef.current.value) {
-      setBodyTypeInvalid("Body type is required");
-      allValid = false;
-    }
     if(!engineTypeRef.current.value) {
       setEngineTypeInvalid("Engine type is required");
       allValid = false;
